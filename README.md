@@ -41,7 +41,7 @@ Output generated files
 
 ### test
 
-Test script
+Sample scripts
 
 ### tools
 
