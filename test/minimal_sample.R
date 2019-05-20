@@ -3,9 +3,9 @@ library(mlbench)
 library(Hmisc)
 library(randomForest)
 
-source("bbcaf_pipeline/util/settings.R")
+source("../../bbcaf_pipeline/util/settings.R")
 
-source("bbcaf_pipeline/pipe.R", chdir=T)
+source("../../bbcaf_pipeline/pipe.R", chdir=T)
 
 load_set <- function() {
     n <- 100

@@ -26,6 +26,13 @@ load_packages <- function() {
   source(paste0(here(), "/util/classify.R"));
   source(paste0(here(), "/util/regression.R"));
   source(paste0(here(), "/util/feature_selection.R"));
+  
+  if(Sys.info()["sysname"] == "Windows") {
+    library(doParallel)
+  } else {
+    #.libPaths(c("/home/vroth/R/x86_64-pc-linux-gnu-library/3.4/", .libPaths())) #bug fix on R 3.4.1
+  library(doMC);
+  }
 }
 
 load_packages();
