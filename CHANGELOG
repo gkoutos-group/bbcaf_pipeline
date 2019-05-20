@@ -1,0 +1,19 @@
+20190520
+Update the way to handle the setwd. Now it requires that the code is sourced using source("pipe.R", chdir=T). Later it should be changed to the call to pipe with a parameter with the output path.
+
+20170727
+added a file from 20170614 - correlation helper and loader
+
+20170711
+added a copy of the file with packages to install
+
+20170710
+fixes to run on windows
+
+20170706 - 
+created
+joined files
+pipe working for regression (w/ and w/out split)
+
+bugs:
+some warnings and invalid scores for the run with splits

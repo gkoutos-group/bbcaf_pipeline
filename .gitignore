@@ -1,0 +1,6 @@
+datasets/*
+*.csv
+*.tsv
+*.png
+.Rhistory
+*.swp
