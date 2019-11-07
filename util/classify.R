@@ -60,15 +60,15 @@ score_auc <- function(method_name = "", fitted_object, eval_dataset, expected_re
   PredProbs <- predict(fitted_object, newdata = eval_dataset, type = "prob")
   PredClass <- predict(fitted_object, eval_dataset[, setdiff(colnames(eval_dataset), ignore_columns)])
   
-  result <- list(sens = sensitivity(data = PredClass, reference = eval_dataset$ResultVariable),
-                 spec = specificity(data = PredClass, reference = eval_dataset$ResultVariable),
-                 roc = myAUC <- pROC::auc(expected_result, predictor = PredProbs[[levels(expected_result)[2]]], levels=c("X1", "X0")))
-  log("Final results:")
-  log(result)
-  log("Confusion matrix:")
-  log(confusionMatrix(data = PredClass, reference = eval_dataset$ResultVariable, positive = "X1"))
-  log("AUC:")
-  log(ci(expected_result, predictor = PredProbs$X1))
+  #result <- list(sens = sensitivity(data = PredClass, reference = eval_dataset$ResultVariable, positive='X1', negative='X0'),
+  #               spec = specificity(data = PredClass, reference = eval_dataset$ResultVariable, positive='X1', negative='X0'),
+  #               roc = myAUC <- pROC::auc(expected_result, predictor = PredProbs[[levels(expected_result)[2]]], levels=c("X1", "X0")))
+  #log("Final results:")
+  #log(result)
+  #log("Confusion matrix:")
+  #log(confusionMatrix(data = PredClass, reference = eval_dataset$ResultVariable, positive = "X1"))
+  #log("AUC:")
+  #log(ci(expected_result, predictor = PredProbs$X1))
   
   if(plot == T) {
     options(bitmapType='cairo')

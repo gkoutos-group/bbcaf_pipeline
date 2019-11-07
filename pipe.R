@@ -11,7 +11,7 @@ options(show.error.locations=TRUE)
 set.seed(123) # for initialization
 # this value will be reset inside
 
-install.packages("here")
+tryCatch({library(here)}, error=function(e) {install.packages('here')})
 library(here)
 
 library(caret)
@@ -333,7 +333,7 @@ pipe <- function(database=load_base, settings=settings) {
   ########################### loop training different models
   data_o <- data
   for(i in settings$algos) {
-    data <- data
+    data <- data_o #this prevents continuously reducing the set
     result_name <- i
     log(sprintf("Training algorithm: %s", result_name));
     this_result <- NULL
@@ -378,10 +378,32 @@ pipe <- function(database=load_base, settings=settings) {
           
           if(settings$save_models) {
             print("SAVING MODEL")
-            saveRDS(this_result, paste0(here(), "/output/models/", strftime(Sys.time(),"%Y-%m-%d_%H_%M_%S_%Z"), settings$test_name, "_model_", i))
+            saveRDS(this_result, paste0(here(), "/output/models/", strftime(Sys.time(),"%Y-%m-%d_%H_%M_%S_%Z"), settings$test_name, "_model_", i, '.RDS'))
           }
+
+          if(settings$save_pred) {
+            print('SAVING PREDICTIONS')
+			
+            pred_vals_prob <- predict(this_result, dataTrain[, setdiff(colnames(dataTrain), c("ResultVariable"))], type="prob")
+			pred_file <- paste0(here(), "/output/pred/", strftime(Sys.time(),"%Y-%m-%d_%H_%M_%S_%Z"), settings$test_name, "_prediction_train_", i, '.csv')
+            dfT <- dataTrain
+            dfT$predX0 <- pred_vals_prob$X0
+            dfT$predX1 <- pred_vals_prob$X1
+			write.csv(dfT, pred_file)
+
+            pred_vals_prob <- predict(this_result, dataTest[, setdiff(colnames(dataTest), c("ResultVariable"))], type="prob")
+			pred_file <- paste0(here(), "/output/pred/", strftime(Sys.time(),"%Y-%m-%d_%H_%M_%S_%Z"), settings$test_name, "_prediction_test_", i, '.csv')
+            dfT <- dataTest
+            dfT$predX0 <- pred_vals_prob$X0
+            dfT$predX1 <- pred_vals_prob$X1
+			write.csv(dfT, pred_file)
+
+            rm(dfT)
+            rm(pred_vals_prob)
+            rm(pred_file)
+	      }
           
-          log(sprintf("Training algorithm: %s", result_name));
+          log(sprintf("Important variables for training algorithm: %s", result_name));
           log(varImp(this_result, scale=T));
           log(sprintf("Results were:"))
           log(this_result$results);

@@ -54,6 +54,9 @@ settings <- list(
   
   #save the environment,
   save_env = F,
+
+  #save predictions
+  save_pred = F,
   
   #to load from the saved models
   load_and_run_from_models = F,
