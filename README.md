@@ -1,5 +1,4 @@
 # bbcaf_pipeline
-
 ## Needed and recommended packages
 
 Use the installed script "install_packages.R". The version of R used is 3.4.1.
@@ -42,7 +41,7 @@ Output generated files
 
 ### test
 
-Test script
+Sample scripts
 
 ### tools
 
