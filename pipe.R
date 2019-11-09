@@ -338,12 +338,12 @@ pipe <- function(database=load_base, settings=settings) {
     log(sprintf("Training algorithm: %s", result_name));
     this_result <- NULL
     tryCatch({
-      if(settings$load_and_run_from_models) {
+      if(settings$load_and_run_from_models) { # loading the model from file
         print("LOADING MODEL")
         dataTest <- data
         this_result <- readRDS(paste0(here(), "/output/models/", strftime(Sys.time(),"%Y-%m-%d_%H_%M_%S_%Z"), settings$test_name, "_model_", i))
-      } else {
-        tryCatch( {
+      } else { # if the model was not loaded
+        tryCatch( { # try to create the model
           if(!is.null(settings$feature_selection) && settings$feature_selection == T && 
              (settings$feature_selection_current_method == T)) {
             log("RUNNING FEATURE SELECTION INSIDE")
@@ -409,23 +409,24 @@ pipe <- function(database=load_base, settings=settings) {
           log(this_result$results);
           log(sprintf("Whole model information:"))
           log(this_result)
-        }, error = function(e) {
+        }, error = function(e) { # if model creation failed
           log(e);
           log(colSums(is.na(data)));
         })
       }
-      if(settings$regression) {
-        # results_rmse[[result_name]] <- min(this_result$results$RMSE); ############################################################ TODO: CHANGE - FIX TO GET THE ONE USED
+
+      if(settings$regression) { # if regression
+        # results_rmse[[result_name]] <- min(this_result$results$RMSE); ############################################################ TODO: NEEDS TO GET THE METRIC USED INSTEAD
         if(!is.na(max(this_result$results$Rsquared))) {
           results_r2[[result_name]] <- max(this_result$results$Rsquared);
         }
-      } else {
+      } else { #classification
         if(!is.na(max(this_result$results$ROC)) & max(this_result$results$ROC) >= 0 & max(this_result$results$ROC) <= 1) {
-          results_roc[[result_name]] <- max(this_result$results$ROC);
+          results_roc[[result_name]] <- max(this_result$results$ROC); # use the best fold score
         }
       }
       
-      if(settings$return_predictions) {
+      if(settings$return_predictions) { # this will return the predictions and stop
         pred_vals <- predict(this_result, dataTest[, setdiff(colnames(dataTest), c("ResultVariable"))])
         pred_vals_prob <- predict(this_result, dataTest[, setdiff(colnames(dataTest), c("ResultVariable"))], type="prob")
         if(Sys.info()["sysname"] == "Windows") {
@@ -435,7 +436,7 @@ pipe <- function(database=load_base, settings=settings) {
         return(data.frame(real_value = dataTest$ResultVariable, predicted = pred_vals, probs = pred_vals_prob))
       }
       
-      if(settings$split_test) {
+      if(settings$split_test) { # if this is a split test we need to get the values for the other set
         if(settings$regression) {
           pred_val <- predict(this_result, dataTest[, setdiff(colnames(dataTest), c("ResultVariable"))])
           results <- postResample(pred = pred_val, obs = dataTest$ResultVariable);
@@ -446,13 +447,13 @@ pipe <- function(database=load_base, settings=settings) {
             print("Values obtained")
             print(data.frame(obs = dataTest$ResultVariable, pred = pred_val))
           }
-        } else {
+        } else { # if classification
           results_split_roc[[result_name]] <- score_auc(method_name = result_name,
-                                              fitted_object = this_result,
-                                              eval_dataset = dataTest,
-                                              expected_result = dataTest$ResultVariable,
-                                              ignore_columns = c("ResultVariable"),
-                                              plot = settings$plot_auc_test);
+					                                    fitted_object = this_result,
+					                                    eval_dataset = dataTest,
+					                                    expected_result = dataTest$ResultVariable,
+					                                    ignore_columns = c("ResultVariable"),
+					                                    plot = settings$plot_auc_test);
         }
       }
     },
