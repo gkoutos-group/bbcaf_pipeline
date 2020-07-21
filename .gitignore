@@ -4,3 +4,4 @@ datasets/*
 *.png
 .Rhistory
 *.swp
+/output
