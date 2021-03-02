@@ -1,5 +1,13 @@
 # BBCAF ML Pipeline
 
+[![DOI](https://zenodo.org/badge/187649498.svg)](https://zenodo.org/badge/latestdoi/187649498)
+
+Author: Victor Roth Cardoso - V.RothCardoso@bham.ac.uk
+
+E-mail me suggestions, comments and issues.
+
+## Introduction
+
 This is the repository for the ML scripts used in *Winnie Chua, Yanish Purmah, Victor R Cardoso, Georgios V Gkoutos, Samantha P Tull, Georgiana Neculau, Mark R Thomas, Dipak Kotecha, Gregory Y H Lip, Paulus Kirchhof, Larissa Fabritz, Data-driven discovery and validation of circulating blood-based biomarkers associated with prevalent atrial fibrillation, European Heart Journal, Volume 40, Issue 16, 21 April 2019, Pages 1268–1276, https://doi.org/10.1093/eurheartj/ehy815.*
 
 There are many packages that were installed with our setup. You won't need all of them and they may be installed as required. The recommended packages are in  "install_packages.R". The version of R used is 3.4.1.
